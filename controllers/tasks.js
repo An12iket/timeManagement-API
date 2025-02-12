@@ -2,21 +2,24 @@ const Task = require("../models/Tasks");
 
 // Create a task
 const createTask = async (req, res) => {
-    const { title, description, deadline, category } = req.body;
+  const { title, description, deadline, category } = req.body;
 
-    try {
-      const task = await Task.create({
-        title,
-        description,
-        deadline,
-        category,
-        createdBy: req.user.id, // Extracted from JWT token
-      });
-      res.status(201).json(task);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to create task" });
-    }
-  };
+  try {
+    console.log("Incoming Task Data:", req.body); // Log received data
+    const task = await Task.create({
+      title,
+      description,
+      deadline,
+      category,
+      createdBy: req.user?.id, // Ensure createdBy exists
+    });
+    res.status(201).json(task);
+  } catch (error) {
+    console.error("Error creating task:", error); // Log the exact error
+    res.status(500).json({ error: error.message || "Failed to create task" });
+  }
+};
+
 
 // Get all tasks
 const getTasks = async (req, res) => {
